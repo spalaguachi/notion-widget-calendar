@@ -1,6 +1,33 @@
 @font-face {
- font-family: Roboto Mono;
- src: url("./fonts/Roboto_Mono/RobotoMono-Regular.ttf") format("truetype");
+  font-family: Roboto Mono;
+  src: url("./fonts/Roboto_Mono/RobotoMono-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Roboto Flex;
+  src: url("./fonts/Roboto_Flex/RobotoFlex-VariableFont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url("./fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Literata;
+  src: url("./fonts/Literata/Literata-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Literata;
+  src: url("./fonts/Literata/Literata-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: Literata;
+  src: url("./fonts/Literata/Literata-SemiBold.ttf") format("truetype");
+  font-weight: 600;
 }
 
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -39,26 +66,30 @@ footer, header, hgroup, menu, nav, section {
 }
 
 body {
-	line-height: 1;
+  line-height: 1;
 }
 
-ol, ul {
-	list-style: none;
+ol,
+ul {
+  list-style: none;
 }
 
-blockquote, q {
-	quotes: none;
+blockquote,
+q {
+  quotes: none;
 }
 
-blockquote::before, blockquote::after,
-q::before, q::after {
-	content: '';
-	content: none;
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: "";
+  content: none;
 }
 
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 :root {
@@ -68,9 +99,14 @@ table {
   text-rendering: optimizelegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
-*{
+* {
   box-sizing: border-box;
+}
+
+.preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
