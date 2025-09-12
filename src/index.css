@@ -107,6 +107,11 @@ table {
 
 .preview {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+}
+
+.preview::before {
+  /* flex: 1; */
+  content: "";
 }

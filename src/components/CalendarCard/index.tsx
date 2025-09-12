@@ -10,7 +10,7 @@ interface CalendarCardProps {
 
 const CalendarCard = ({ display = "fixed" }: CalendarCardProps) => {
   const currentDate = new Date();
-  const {monthName, year} = getCalendarHeaderData(currentDate)
+  const { monthName, year } = getCalendarHeaderData(currentDate);
 
   return (
     <div className={`calendar-container ${display}`}>

@@ -1,79 +1,78 @@
 .calendar-container {
-    border: solid;
-    border-color: #000;
+  border: solid;
+  border-color: #000;
 }
 
 .calendar-container.variable {
-    width: 815px;
-    height: 1061px;
+  width: 815px;
+  height: 1061px;
 }
 
 .calendar-container.fixed {
-    width: 505px;
-    height: 640px;
-    padding: 30px 40px;
+  width: 505px;
+  height: 640px;
+  padding: 30px 40px;
 }
 
 .image-container {
-    background-color: #F1EAFF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 45%;
+  background-color: #f1eaff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 45%;
 
-    h1 {
-        padding-top: 10px;
-        padding-bottom: 5px;
-        font-family: Roboto Flex;
-        font-size: 14px;
-    }
-    p {
-        font-family: Roboto Flex;
-        font-size: 12px;
-        color: #898989;
-    }
+  h1 {
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-family: Roboto Flex;
+    font-size: 14px;
+  }
+  p {
+    font-family: Roboto Flex;
+    font-size: 12px;
+    color: #898989;
+  }
 }
 .calendar-header {
-    /* height: 10vh; */
-    font-family: Literata;
-    font-weight: 600;
-    font-size: 25px;
-    text-align: center;
-    vertical-align: middle;
-    padding: 2.5% 0;
+  /* height: 10vh; */
+  font-family: Literata;
+  font-weight: 600;
+  font-size: 25px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 2.5% 0;
 }
 .calendar-grid {
-    font-family: Literata;
-    font-weight: bold;
-    display: grid;
-    height: 270px;
-    /* align-items: center; */
-    grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: minmax(38px, auto);
-
+  font-family: Literata;
+  font-weight: bold;
+  display: grid;
+  height: 270px;
+  /* align-items: center; */
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(38px, auto);
 }
 .grid-cell {
-    /* width: 30px; */
-    /* height: 30px; */
-    /* align-items: center; */
-    background-color: antiquewhite;
-    border: solid;
-    border-color: #fff;
-    font-family: inherit;
-    font-weight: bold;
-    font-size: 18px;
+  /* width: 30px; */
+  /* height: 30px; */
+  /* align-items: center; */
+  background-color: antiquewhite;
+  border: solid;
+  border-color: #fff;
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 18px;
 }
 .day-cell {
-    display: flex;
-    padding-right: 4px;
-    /* font-family: ; */
-    /* font-size: 20px; */
-    /* align-items: right; */
-    justify-content: right;  
+  display: flex;
+  padding-right: 4px;
+  /* font-family: ; */
+  /* font-size: 20px; */
+  /* align-items: right; */
+  justify-content: right;
 }
 .weekday-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
