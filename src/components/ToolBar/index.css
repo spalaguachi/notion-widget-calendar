@@ -4,6 +4,7 @@
 }
 
 .toolbar {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -25,11 +26,22 @@
   height: 30px;
 }
 
-.theme-picker {
+.color-selector-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 35%;
+}
+
+.toolbar>.color-selector-area>.theme-picker {
   border-radius: 50%;
   width: 30px;
   height: 30px;
   background-color: pink;
+}
+
+.theme-picker.active {
+  border: 2px solid #916CFF;
 }
 
 .divider {

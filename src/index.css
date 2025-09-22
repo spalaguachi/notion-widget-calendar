@@ -4,6 +4,12 @@
 }
 
 @font-face {
+  font-family: Roboto Mono;
+  src: url("./fonts/Roboto_Mono/RobotoMono-Light.ttf") format("truetype");
+  font-weight: lighter;
+}
+
+@font-face {
   font-family: Roboto Flex;
   src: url("./fonts/Roboto_Flex/RobotoFlex-VariableFont.ttf") format("truetype");
 }
