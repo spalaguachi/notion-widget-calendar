@@ -51,4 +51,3 @@ export const setDefaultImage = (isDefaultImage: boolean): SetDefaultImage => ({
   type: ActionType.SetDefaultImage,
   payload: isDefaultImage,
 });
-

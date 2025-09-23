@@ -14,15 +14,15 @@ export interface ThemeData {
 export const initialTheme: ThemeData = {
   weekColor: DEFAULT_COLOR_SCHEME.WEEK_COLOR,
   dayColor: DEFAULT_COLOR_SCHEME.DAY_COLOR,
-  lightTheme: "light",
+  lightTheme: "",
   isDefaultImage: false,
 };
 
 /*check if initial should be null or initialTheme  if dispatch gives issues set to Dispatch<> | null*/
 export const ThemeContext = createContext<{
-  theme: ThemeData | null;
+  theme: ThemeData;
   dispatch: React.Dispatch<EditModeActions>;
-}>({ theme: null, dispatch: () => undefined });
+}>({ theme: initialTheme, dispatch: () => undefined });
 
 export function useTheme() {
   const { theme } = useContext(ThemeContext);

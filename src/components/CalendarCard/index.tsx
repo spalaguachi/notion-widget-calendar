@@ -3,6 +3,7 @@ import "./index.css";
 import ImageContainer from "./components/ImageContainer";
 import { getCalendarHeaderData } from "./CalendarHelpers";
 import CalendarGrid from "./components/CalendarGrid";
+import { useTheme } from "../../utils/context";
 
 interface CalendarCardProps {
   display?: string;
@@ -11,9 +12,9 @@ interface CalendarCardProps {
 const CalendarCard = ({ display = "fixed" }: CalendarCardProps) => {
   const currentDate = new Date();
   const { monthName, year } = getCalendarHeaderData(currentDate);
-
+  const theme = useTheme();
   return (
-    <div className={`calendar-container ${display}`}>
+    <div className={`calendar-container ${display} ${theme.lightTheme}`}>
       <ImageContainer />
       <div>
         <p className="calendar-header">
