@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "../../../utils/context";
 
 export interface CalendarDayProps {
   dayNumber: number | null;
@@ -6,16 +7,15 @@ export interface CalendarDayProps {
 }
 
 const CalendarDay = ({ dayNumber, isToday }: CalendarDayProps) => {
+  const theme = useTheme();
+  const style = isToday
+    ? { backgroundColor: theme.weekColor }
+    : { backgroundColor: theme.dayColor };
   if (dayNumber === null) {
-    return <div className="grid-cell" />;
+    return <div className="grid-cell" style={style} />;
   }
   return (
-    <div
-      className="grid-cell day-cell"
-      style={
-        isToday ? { backgroundColor: "#2ee" } : {}
-      } /*style={today==daynumber ? Theme.themeweek : Theme.themeday}*/
-    >
+    <div className="grid-cell day-cell" style={style}>
       {dayNumber}
     </div>
   );

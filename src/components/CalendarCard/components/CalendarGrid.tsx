@@ -1,49 +1,34 @@
 import React from "react";
 import {
   getCalendarData,
-  getTotalCells,
   WEEKDAY_NAMES,
   generateCells,
 } from "../CalendarHelpers";
-import CalendarDay, { type CalendarDayProps } from "./CalendarDay";
+import CalendarDay from "./CalendarDay";
+import { useTheme } from "../../../utils/context";
 
-const CalendarGrid = () => {
-  const currentDate = new Date();
-  const { daysInMonth, firstWeekdayOfMonth, todayNum } =
-    getCalendarData(currentDate);
-  const totalCells = getTotalCells(firstWeekdayOfMonth, daysInMonth);
+interface CalendarGridProps {
+  date?: Date;
+}
 
-  const getDayPropData = (cellIndex: number): CalendarDayProps => {
-    const dayNumber = cellIndex - firstWeekdayOfMonth + 1;
-    const firstEmptyCells = cellIndex < firstWeekdayOfMonth;
-    const lastEmptyCells = cellIndex >= firstWeekdayOfMonth + daysInMonth;
-
-    if (firstEmptyCells || lastEmptyCells) {
-      return {
-        dayNumber: null,
-        isToday: false,
-      };
-    }
-    return {
-      dayNumber: dayNumber,
-      isToday: todayNum === cellIndex,
-    };
-  };
+const CalendarGrid = ({ date = new Date() }: CalendarGridProps) => {
+  const theme = useTheme();
+  const weekStyle: React.CSSProperties = { backgroundColor: theme.weekColor };
+  const { month, todayNum } = getCalendarData(date);
 
   return (
     <div className="calendar-grid">
       {WEEKDAY_NAMES.map((day) => (
-        <div key={day} className="weekday-header grid-cell">
+        <div key={day} className="weekday-header grid-cell" style={weekStyle}>
           {day}
         </div>
       ))}
-      {generateCells(totalCells, (cellIndex) => {
-        const { dayNumber, isToday } = getDayPropData(cellIndex);
+      {generateCells(month.length, (cellIndex) => {
         return (
           <CalendarDay
             key={cellIndex}
-            dayNumber={dayNumber}
-            isToday={isToday}
+            dayNumber={month[cellIndex]}
+            isToday={todayNum === month[cellIndex]}
           />
         );
       })}

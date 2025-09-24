@@ -1,12 +1,5 @@
 //helper methods for calendar calculations
 
-// interface for date handling
-interface DateData {
-  daysInMonth: number;
-  firstWeekdayOfMonth: number;
-  todayNum: number;
-}
-
 // Days in each month (non-leap year)
 const MONTH_LENGTHS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -62,6 +55,7 @@ const getDaysInMonth = (date: Date): number => {
   const year = date.getFullYear();
   return month === 1 ? (isLeapYear(year) ? 29 : 28) : MONTH_LENGTHS[month];
 };
+
 // Get the day of the week for the first day of the month (0-6, where 0 is Sunday)
 const getFirstWeekdayOfMonth = (date: Date): number => {
   const month = date.getMonth();
@@ -69,31 +63,38 @@ const getFirstWeekdayOfMonth = (date: Date): number => {
   return new Date(year, month, 1).getDay();
 };
 
-// get remaining empty cells needed to fill the calendar grid
-export const getLastCells = (
-  firstEmptyCells: number,
-  dayCells: number,
-): number => {
-  return (7 - ((firstEmptyCells + dayCells) % 7)) % 7;
-};
-
 // Get total cells in calendar grid, includes the first empty cells, days in the month,
 // and the remaining cells to fill the grid
-export const getTotalCells = (
-  firstEmptyCells: number,
-  dayCells: number,
-): number => {
-  return firstEmptyCells + dayCells + getLastCells(firstEmptyCells, dayCells);
+const getTotalCells = (firstEmptyCells: number, dayCells: number): number => {
+  const totalDays = firstEmptyCells + dayCells;
+  const totalWeeks = Math.ceil(totalDays / 7);
+  return totalWeeks * 7;
 };
-// wrapper function fo calendar date information
-export const getCalendarData = (date: Date): DateData => {
+
+export interface CellData {
+  month: (null | number)[];
+  todayNum: number;
+}
+
+//data handling wrapper
+export const getCalendarData = (date: Date): CellData => {
   return {
-    daysInMonth: getDaysInMonth(date),
-    firstWeekdayOfMonth: getFirstWeekdayOfMonth(date),
+    month: calculateMonthCells(date),
     todayNum: getTodaysNum(date),
   };
 };
 
+const calculateMonthCells = (date: Date): (null | number)[] => {
+  const daysInMonth = getDaysInMonth(date);
+  const firstWeekdayOfMonth = getFirstWeekdayOfMonth(date);
+  const totalCells = getTotalCells(firstWeekdayOfMonth, daysInMonth);
+  const monthCells = Array(totalCells).fill(null);
+  for (let day = 1; day <= daysInMonth; day++) {
+    const pos = day + firstWeekdayOfMonth - 1;
+    monthCells[pos] = day;
+  }
+  return monthCells;
+};
 //a generic function to generate an array based on set length and some function, generateCells(8, i => <div key={i} />)
 export const generateCells = <T>(
   length: number,

@@ -4,8 +4,8 @@ export const COLOR_TARGET = {
 } as const;
 
 export const DEFAULT_COLOR_SCHEME = {
-  WEEK_COLOR: "#F9ECE5",
-  DAY_COLOR: "#E9C2CB",
+  WEEK_COLOR: "#E9C2CB",
+  DAY_COLOR: "#F9ECE5",
 } as const;
 
 export const DEFAULT_PRESET_COLORS = [
