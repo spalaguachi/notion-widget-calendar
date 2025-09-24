@@ -7,12 +7,26 @@ import ColorSelector from "./components/ColorSelector";
 import { COLOR_TARGET } from "./color";
 import { useColorSelector } from "./hooks/useColorSelector";
 import { useOuterClick } from "./hooks/useOuterClick";
+import { useTheme } from "../../utils/context";
+import { type Ref } from "react";
+//passing refs,hooks,
+interface ToolBarViewProps {
+  weekColor: string;
+  dayColor: string;
+  activeSelector: string | null;
+  showPopUp: boolean;
+  handleColorSelector: (selectorType: string) => void;
+  interactiveAreaRef: Ref<HTMLDivElement>;
+}
 
-const ToolBar = () => {
-  const { activeSelector, showPopUp, handleColorSelector, handleClosePopUp } =
-    useColorSelector();
-  const interactiveAreaRef = useOuterClick(handleClosePopUp, showPopUp);
-
+const ToolBarView = ({
+  weekColor,
+  dayColor,
+  activeSelector,
+  showPopUp,
+  handleColorSelector,
+  interactiveAreaRef,
+}: ToolBarViewProps) => {
   return (
     <div className="toolbar-container">
       <div className="toolbar">
@@ -21,14 +35,16 @@ const ToolBar = () => {
             selectorType={COLOR_TARGET.WEEK}
             isActive={activeSelector === COLOR_TARGET.WEEK}
             onClick={handleColorSelector}
+            style={{ backgroundColor: weekColor }}
           />
           <ColorSelector
             selectorType={COLOR_TARGET.DAY}
             isActive={activeSelector === COLOR_TARGET.DAY}
             onClick={handleColorSelector}
+            style={{ backgroundColor: dayColor }}
           />
           <PopUp isOpen={showPopUp}>
-            <ColorPicker />
+            <ColorPicker selectorType={activeSelector} />
           </PopUp>
         </div>
         <hr className="divider" />
@@ -36,6 +52,21 @@ const ToolBar = () => {
         <img src={imgButton} alt="default image button" />
       </div>
     </div>
+  );
+};
+const ToolBar = () => {
+  const { activeSelector, showPopUp, handleColorSelector, handleClosePopUp } =
+    useColorSelector();
+  const interactiveAreaRef = useOuterClick(handleClosePopUp, showPopUp);
+  const theme = useTheme();
+  return (
+    <ToolBarView
+      {...theme}
+      activeSelector={activeSelector}
+      showPopUp={showPopUp}
+      handleColorSelector={handleColorSelector}
+      interactiveAreaRef={interactiveAreaRef}
+    />
   );
 };
 
