@@ -1,21 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import sun from "../../../assets/sun.svg";
 import moon from "../../../assets/moon.svg";
+import { useTheme, useThemeDispatch } from "../../../utils/context";
+import { setLightMode } from "../../../utils/reducer";
 
 const LightToggle = () => {
-  const [light, setLight] = useState(true);
+  const dispatch = useThemeDispatch();
+  const theme = useTheme();
+  const imgSrc = theme.isLight ? sun : moon;
+
   const handleChangeLight = () => {
-    setLight((previousLight) => !previousLight);
+    dispatch(setLightMode(!theme.isLight));
   };
-  return (
-    <>
-      {light ? (
-        <img src={sun} onClick={handleChangeLight} />
-      ) : (
-        <img src={moon} onClick={handleChangeLight} />
-      )}
-    </>
-  );
+
+  return <img src={imgSrc} onClick={handleChangeLight} />;
 };
 
 export default LightToggle;

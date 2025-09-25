@@ -18,8 +18,9 @@ const CalendarCard = ({
   //todo useEffect...to keep date current
 
   const theme = useTheme();
+  const lightMode = theme.isLight ? "" : "dark";
   return (
-    <div className={`calendar-container ${display} ${theme.lightTheme}`}>
+    <div className={`calendar-container ${display} ${lightMode}`}>
       <ImageContainer />
       <div>
         <p className="calendar-header">

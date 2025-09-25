@@ -24,7 +24,7 @@ export function themeReducer(
     case ActionType.EditDayColor:
       return { ...theme, dayColor: action.payload };
     case ActionType.SetLightMode:
-      return { ...theme, lightTheme: action.payload };
+      return { ...theme, isLight: action.payload };
     case ActionType.SetDefaultImage:
       return { ...theme, isDefaultImage: action.payload };
     default:
@@ -42,9 +42,9 @@ export const editDayColor = (color: string): EditDayColor => ({
   payload: color,
 });
 
-export const setLightMode = (lightTheme: string): SetLightMode => ({
+export const setLightMode = (isLight: boolean): SetLightMode => ({
   type: ActionType.SetLightMode,
-  payload: lightTheme,
+  payload: isLight,
 });
 
 export const setDefaultImage = (isDefaultImage: boolean): SetDefaultImage => ({

@@ -7,14 +7,14 @@ import { DEFAULT_COLOR_SCHEME } from "../components/ToolBar/color";
 export interface ThemeData {
   weekColor: string;
   dayColor: string;
-  lightTheme: string;
+  isLight: boolean;
   isDefaultImage: boolean;
 }
 
 export const initialTheme: ThemeData = {
   weekColor: DEFAULT_COLOR_SCHEME.WEEK_COLOR,
   dayColor: DEFAULT_COLOR_SCHEME.DAY_COLOR,
-  lightTheme: "",
+  isLight: true,
   isDefaultImage: false,
 };
 
@@ -28,7 +28,14 @@ export function useTheme() {
   const { theme } = useContext(ThemeContext);
   return theme;
 }
-
+interface ColorThemeData {
+  weekColor: string;
+  dayColor: string;
+}
+export function useColorTheme(): ColorThemeData {
+  const { theme } = useContext(ThemeContext);
+  return { dayColor: theme.dayColor, weekColor: theme.weekColor };
+}
 export function useThemeDispatch() {
   const { dispatch } = useContext(ThemeContext);
   return dispatch;

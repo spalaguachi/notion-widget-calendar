@@ -16,7 +16,7 @@ export interface EditDayColor {
 
 export interface SetLightMode {
   type: typeof ActionType.SetLightMode;
-  payload: string; //light,dark
+  payload: boolean;
 }
 
 //might need more logic (compare default with uploaded) somewhere not here
