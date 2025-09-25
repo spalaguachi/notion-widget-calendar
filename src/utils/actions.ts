@@ -7,11 +7,11 @@ export const ActionType = {
 
 export interface EditWeekColor {
   type: typeof ActionType.EditWeekColor;
-  payload: string; // #42021
+  payload: string;
 }
 export interface EditDayColor {
   type: typeof ActionType.EditDayColor;
-  payload: string; //#4rirp
+  payload: string;
 }
 
 export interface SetLightMode {

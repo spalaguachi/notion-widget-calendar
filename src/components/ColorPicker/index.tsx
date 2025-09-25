@@ -31,6 +31,16 @@ const ColorPicker = ({ selectorType }: ColorPickerProps) => {
     boxShadow: "none",
     fontWeight: "lighter",
   };
+  
+  const handleClick = (color: string) => {
+    const hex = color.toUpperCase();
+    if (selectorType === COLOR_TARGET.WEEK) {
+      dispatch(editWeekColor(hex));
+    } else {
+      dispatch(editDayColor(hex));
+    }
+    updateRecentColors(hex);
+  };
   return (
     <>
       <Sketch
@@ -38,14 +48,7 @@ const ColorPicker = ({ selectorType }: ColorPickerProps) => {
         color={hex}
         presetColors={presetColors}
         disableAlpha={true}
-        onChange={(color) => {
-          if (selectorType === COLOR_TARGET.WEEK) {
-            dispatch(editWeekColor(color.hex));
-          } else {
-            dispatch(editDayColor(color.hex));
-          }
-          updateRecentColors(color.hex);
-        }}
+        onChange={(color) => handleClick(color.hex)}
       />
     </>
   );

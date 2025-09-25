@@ -7,7 +7,7 @@ import ColorSelector from "./components/ColorSelector";
 import { COLOR_TARGET } from "./color";
 import { useColorSelector } from "./hooks/useColorSelector";
 import { useOuterClick } from "./hooks/useOuterClick";
-import { useTheme } from "../../utils/context";
+import { useColorTheme } from "../../utils/context";
 import { type Ref } from "react";
 //passing refs,hooks,
 interface ToolBarViewProps {
@@ -58,7 +58,8 @@ const ToolBar = () => {
   const { activeSelector, showPopUp, handleColorSelector, handleClosePopUp } =
     useColorSelector();
   const interactiveAreaRef = useOuterClick(handleClosePopUp, showPopUp);
-  const theme = useTheme();
+  const theme = useColorTheme();
+
   return (
     <ToolBarView
       {...theme}

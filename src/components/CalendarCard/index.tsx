@@ -15,8 +15,6 @@ const CalendarCard = ({
 }: CalendarCardProps) => {
   const { monthName, year } = getCalendarHeaderData(date);
 
-  //todo useEffect...to keep date current
-
   const theme = useTheme();
   const lightMode = theme.isLight ? "" : "dark";
   return (

@@ -9,10 +9,11 @@ export const DEFAULT_COLOR_SCHEME = {
 } as const;
 
 export const DEFAULT_PRESET_COLORS = [
+  DEFAULT_COLOR_SCHEME.WEEK_COLOR,
+  DEFAULT_COLOR_SCHEME.DAY_COLOR,
   "#FADADD",
   "#98FF98",
   "#FFF1AC",
   "#87CEEB",
   "#E6E6FA",
 ];
-export const DEFAULT_HEX = "#2ee";
