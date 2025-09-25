@@ -1,5 +1,4 @@
 import "./index.css";
-import imgButton from "../../assets/image.svg";
 import LightToggle from "./components/LightToggle";
 import PopUp from "../PopUp";
 import ColorPicker from "../ColorPicker";
@@ -9,6 +8,7 @@ import { useColorSelector } from "./hooks/useColorSelector";
 import { useOuterClick } from "./hooks/useOuterClick";
 import { useColorTheme } from "../../utils/context";
 import { type Ref } from "react";
+import DefaultImage from "./components/DefaultImage";
 //passing refs,hooks,
 interface ToolBarViewProps {
   weekColor: string;
@@ -49,7 +49,7 @@ const ToolBarView = ({
         </div>
         <hr className="divider" />
         <LightToggle />
-        <img src={imgButton} alt="default image button" />
+        <DefaultImage />
       </div>
     </div>
   );
