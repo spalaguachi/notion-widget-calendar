@@ -1,4 +1,3 @@
-import React from "react";
 import imgUpload from "../../../assets/upload_cloud.svg";
 
 const ImageContainer = () => {

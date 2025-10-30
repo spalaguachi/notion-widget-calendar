@@ -1,4 +1,3 @@
-import React from "react";
 import { useTheme } from "../../../utils/context";
 
 export interface CalendarDayProps {

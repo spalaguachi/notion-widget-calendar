@@ -1,4 +1,3 @@
-import React from "react";
 import imgButton from "../../../assets/image_outline.svg";
 import imgButtonDisabled from "../../../assets/grey_image_outline.svg";
 import { useTheme, useThemeDispatch } from "../../../utils/context";
