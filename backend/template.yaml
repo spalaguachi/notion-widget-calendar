@@ -1,0 +1,198 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  backend
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+    Runtime: python3.12
+  Api:
+    Cors:
+      AllowMethods: "'GET,PUT,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
+
+# Parameters:
+#   sourceBucket:
+#     Type: String
+#     Description: "Bucket to store site data such as original pictures and metadata"
+#     AllowedPattern: "^[a-z0-9][a-z0-9-]*[a-z0-9]$"  # S3 naming rules
+#     ConstraintDescription: "Must be valid S3 bucket name (lowercase, hyphens)"
+#     MinLength: 3
+#     MaxLength: 63
+
+Resources:
+  #API Gateway REST API
+  CalendarApi:
+    Type: AWS::Serverless::Api 
+    Properties:
+      StageName: Prod
+      Cors:
+          AllowMethods: "'GET,PUT,OPTIONS'"
+          AllowHeaders: "'content-type'"
+          AllowOrigin: "'*'"
+  #usage plan overkill bc lambda default throttling, might cause errs: usageplan needs openapi config at calendarapi         
+  CalendarUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan  # AWS resource for throttling/quotas
+    Properties:
+      UsagePlanName: CalendarAppUsagePlan
+      Description: Rate limiting for Calendar API  # Optional description
+      ApiStages:  
+        - ApiId: !Ref CalendarApi
+          Stage: Prod  
+      Throttle:  
+        RateLimit: 10 # 10 reqs/sec
+        BurstLimit: 20 # max 20 concurrent reqs
+      Quota:
+        Limit: 1000  # max 1000 reqs per period
+        Period: DAY
+  
+  MetadataFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/dynamodb_lambda
+      Handler: app.lambda_handler
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ItemsTable
+      Policies: 
+        - DynamoDBWritePolicy:
+            TableName: !Ref ItemsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref ItemsTable
+        # - DynamoDBCrudPolicy:
+        #     TableName: 
+        #       !Ref ItemsTable
+      Architectures:
+        - arm64
+      Events:
+        GetAllItems:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref CalendarApi
+            Path: /metadata
+            Method: GET
+        GetAnItem:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref CalendarApi
+            Path: /metadata/{id}
+            Method: GET
+        CreateItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CalendarApi
+            Path: /metadata
+            Method: PUT
+      # Tags: 
+      #   Key: "Lambda"
+      #   Value: Ref! MetadataFunction
+      
+  ImageFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/s3_lambda
+      Handler: app.lambda_handler
+      MemorySize: 512
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref SourceBucket
+      Policies:
+        - Statement:
+          - Sid: ReadWritePolicy
+            Effect: Allow
+            Action: 
+              - s3:HeadObject
+              - s3:PutObject
+              - s3:GetObject
+            Resource: !Sub "${SourceBucket.Arn}/*"
+          # - Sid: ListBucketPolicy
+          #   Effect: Allow
+          #   Action:
+          #     - s3:ListBucket
+          #   Resource: !Sub "${SourceBucket.Arn}"
+      Events:
+        UploadImage:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CalendarApi
+            Path: /upload
+            Method: PUT
+        GetImage:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CalendarApi
+            Path: /image/{imageId}
+            Method: GET
+
+  ItemsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      # TableName: metadata-table
+
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # BucketName: !Ref sourceBucket
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*" 
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+            AllowedOrigins:
+              - "https://notion-widget-calendar-dm52.vercel.app"
+              - "http://localhost:3000"
+            ExposedHeaders:
+              - "Etag"
+            MaxAge: 300
+      PublicAccessBlockConfiguration: #by default as of 2023 aws auto enables s3 block public access for all s3 buckets reguards of creation origin (console, cli, sdk,sam cloudformation)
+        BlockPublicAcls: true #however, if settings,change or older accts, or accts where acct level disabled block public access, then bad
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  CalendarApi:
+    Description: "API Gateway endpoint URL for Prod stage for Calendar function"
+    Value: !Sub "https://${CalendarApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
+  MetadataFunction:
+    Description: "Metadata Lambda Function ARN"
+    Value: !GetAtt MetadataFunction.Arn
+  MetadataFunctionIamRole:
+    Description: "Implicit IAM Role created for Metadata function"
+    Value: !GetAtt MetadataFunctionRole.Arn
+  ImageFunction:
+    Description: "Image Lambda Function ARN"
+    Value: !GetAtt ImageFunction.Arn
+  ImageFunctionIamRole:
+    Description: "Implicit IAM Role created for Image function"
+    Value: !GetAtt ImageFunctionRole.Arn
+  ItemsTable:
+    Description: "Metadata Dynamodb Table Arn"
+    # Value: !Ref ItemsTable
+    Value: !GetAtt ItemsTable.Arn
+  ItemsTableName:
+    Description: "Metadata Dynamodb Table Name"
+    Value: !Ref ItemsTable
+  SourceBucket:
+    Description: "Images S3 Bucket"
+    Value: !GetAtt SourceBucket.Arn
+  SourceBucketName:
+    Description: "Images S3 Bucket Name"
+    Value: !Ref SourceBucket
