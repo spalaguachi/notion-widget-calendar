@@ -9,60 +9,44 @@ Globals:
     Timeout: 30
     MemorySize: 128
     Runtime: python3.12
-  Api:
-    Cors:
-      AllowMethods: "'GET,PUT,OPTIONS'"
-      AllowHeaders: "'content-type'"
-      AllowOrigin: "'*'"
-
-# Parameters:
-#   sourceBucket:
-#     Type: String
-#     Description: "Bucket to store site data such as original pictures and metadata"
-#     AllowedPattern: "^[a-z0-9][a-z0-9-]*[a-z0-9]$"  # S3 naming rules
-#     ConstraintDescription: "Must be valid S3 bucket name (lowercase, hyphens)"
-#     MinLength: 3
-#     MaxLength: 63
 
 Resources:
   #API Gateway REST API
   CalendarApi:
-    Type: AWS::Serverless::Api 
+    Type: AWS::Serverless::Api  
     Properties:
       StageName: Prod
       Cors:
-          AllowMethods: "'GET,PUT,OPTIONS'"
+          AllowMethods: "'GET,POST,PUT,OPTIONS'"
           AllowHeaders: "'content-type'"
           AllowOrigin: "'*'"
-  #usage plan overkill bc lambda default throttling, might cause errs: usageplan needs openapi config at calendarapi         
-  CalendarUsagePlan:
-    Type: AWS::ApiGateway::UsagePlan  # AWS resource for throttling/quotas
-    Properties:
-      UsagePlanName: CalendarAppUsagePlan
-      Description: Rate limiting for Calendar API  # Optional description
-      ApiStages:  
-        - ApiId: !Ref CalendarApi
-          Stage: Prod  
-      Throttle:  
-        RateLimit: 10 # 10 reqs/sec
-        BurstLimit: 20 # max 20 concurrent reqs
-      Quota:
-        Limit: 1000  # max 1000 reqs per period
-        Period: DAY
-  
-  MetadataFunction:
+
+  CalendarFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: src/dynamodb_lambda
+      CodeUri: src/
       Handler: app.lambda_handler
+      MemorySize: 512
       Environment:
         Variables:
           TABLE_NAME: !Ref ItemsTable
+          BUCKET_NAME: !Ref SourceBucket
+          ALLOWED_CONTENT_TYPES: "image/jpeg,image/png"
+          ALLOWED_EXTENSIONS: "jpeg,jpg,png"
+          MAX_FILE_SIZE: "5242880"
       Policies: 
         - DynamoDBWritePolicy:
             TableName: !Ref ItemsTable
         - DynamoDBReadPolicy:
             TableName: !Ref ItemsTable
+        - Statement:
+          - Sid: ReadWritePolicy
+            Effect: Allow
+            Action: 
+              - s3:HeadObject
+              - s3:PutObject
+              - s3:GetObject
+            Resource: !Sub "${SourceBucket.Arn}/*"
         # - DynamoDBCrudPolicy:
         #     TableName: 
         #       !Ref ItemsTable
@@ -87,47 +71,6 @@ Resources:
             RestApiId: !Ref CalendarApi
             Path: /metadata
             Method: PUT
-      # Tags: 
-      #   Key: "Lambda"
-      #   Value: Ref! MetadataFunction
-      
-  ImageFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: src/s3_lambda
-      Handler: app.lambda_handler
-      MemorySize: 512
-      Environment:
-        Variables:
-          BUCKET_NAME: !Ref SourceBucket
-      Policies:
-        - Statement:
-          - Sid: ReadWritePolicy
-            Effect: Allow
-            Action: 
-              - s3:HeadObject
-              - s3:PutObject
-              - s3:GetObject
-            Resource: !Sub "${SourceBucket.Arn}/*"
-          # - Sid: ListBucketPolicy
-          #   Effect: Allow
-          #   Action:
-          #     - s3:ListBucket
-          #   Resource: !Sub "${SourceBucket.Arn}"
-      Events:
-        UploadImage:
-          Type: Api
-          Properties:
-            RestApiId: !Ref CalendarApi
-            Path: /upload
-            Method: PUT
-        GetImage:
-          Type: Api
-          Properties:
-            RestApiId: !Ref CalendarApi
-            Path: /image/{imageId}
-            Method: GET
-
   ItemsTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
@@ -171,18 +114,12 @@ Outputs:
   CalendarApi:
     Description: "API Gateway endpoint URL for Prod stage for Calendar function"
     Value: !Sub "https://${CalendarApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
-  MetadataFunction:
-    Description: "Metadata Lambda Function ARN"
-    Value: !GetAtt MetadataFunction.Arn
-  MetadataFunctionIamRole:
-    Description: "Implicit IAM Role created for Metadata function"
-    Value: !GetAtt MetadataFunctionRole.Arn
-  ImageFunction:
-    Description: "Image Lambda Function ARN"
-    Value: !GetAtt ImageFunction.Arn
-  ImageFunctionIamRole:
-    Description: "Implicit IAM Role created for Image function"
-    Value: !GetAtt ImageFunctionRole.Arn
+  CalendarFunction:
+    Description: "Calendar Lambda Function ARN"
+    Value: !GetAtt CalendarFunction.Arn
+  CalendarFunctionIamRole:
+    Description: "Implicit IAM Role created for Calendar function"
+    Value: !GetAtt CalendarFunctionRole.Arn
   ItemsTable:
     Description: "Metadata Dynamodb Table Arn"
     # Value: !Ref ItemsTable

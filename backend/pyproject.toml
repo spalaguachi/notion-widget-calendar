@@ -1,0 +1,5 @@
+[tool.ruff]
+
+indent-width = 4
+
+target-version = "py312"
