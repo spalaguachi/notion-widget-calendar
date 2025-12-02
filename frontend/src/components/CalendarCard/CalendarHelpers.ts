@@ -100,33 +100,3 @@ export const generateCells = <T>(
   length: number,
   fn: (index: number) => T,
 ): T[] => Array.from({ length }, (_, i) => fn(i));
-
-//calc month cells:
-// const firstPart:null[] = Array(firstWeekdayOfMonth).fill(null)
-// const lastCellsNum = getLastCells(firstWeekdayOfMonth, daysInMonth);
-// const endPart:null[] = Array(lastCellsNum).fill(null)
-// const dayPart:number[] = [...Array(daysInMonth).keys()].map(i => i + 1)
-// return [...firstPart,...dayPart,...endPart];
-// return monthCells;
-
-// const totalCells = getTotalCells(firstWeekdayOfMonth, daysInMonth);
-// wrapper function fo calendar date information
-// const getMonthData = (date: Date): DateData => {
-//   return {
-//     daysInMonth: getDaysInMonth(date),
-//     firstWeekdayOfMonth: getFirstWeekdayOfMonth(date),
-//   };
-// };
-// const { daysInMonth, firstWeekdayOfMonth } = getMonthData(date);
-//
-// get remaining empty cells needed to fill the calendar grid
-// export const getLastCells = (
-//   firstEmptyCells: number,
-//   dayCells: number,
-// ): number => {
-//   // lastweekday = new Date(year, month, dayCells).getDay()
-//   // // endofweek = 7 - lastweekday
-//   return (7 - ((firstEmptyCells + dayCells) % 7)) % 7;
-//
-//   getTotalCells: ... return firstEmptyCells + dayCells + getLastCells(firstEmptyCells, dayCells);
-// };
