@@ -1,7 +1,7 @@
 # def validate_calendar_metadata(metadata: dict[str, Any]) -> None | str:
 import pytest
 
-from src.services import calendar_service
+from backend.src.services import calendar_service
 
 import uuid
 import datetime
@@ -28,7 +28,7 @@ def test_validate_calendar_metadata(metadata, monkeypatch):
     monkeypatch.setenv("MAX_FILE_SIZE", "5242880")
 
     ret = calendar_service.validate_calendar_metadata(metadata)
-    assert ret == None
+    assert ret is None
 
 
 def test_validate_file_extension(monkeypatch):
@@ -36,7 +36,7 @@ def test_validate_file_extension(monkeypatch):
     file_extension = "jpg"
     monkeypatch.setenv("ALLOWED_EXTENSIONS", "jpeg,jpg,png")
     ret = calendar_service.validate_file_extension(file_extension, filename)
-    assert ret == True
+    assert ret
 
 
 def test_validate_not_file_extension(monkeypatch):
@@ -44,13 +44,13 @@ def test_validate_not_file_extension(monkeypatch):
     file_extension = "pdf"
     monkeypatch.setenv("ALLOWED_EXTENSIONS", "jpeg,jpg,png")
     ret = calendar_service.validate_file_extension(file_extension, filename)
-    assert ret == False
+    assert not ret
 
 
 def test_validate_hex_code():
     hex_code = "#roid"
     ret = calendar_service.validate_hex_code(hex_code)
-    assert ret == False
+    assert not ret
 
 
 def test_create_calendar(metadata):
