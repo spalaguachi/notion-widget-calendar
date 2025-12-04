@@ -9,6 +9,7 @@ export interface ThemeData {
   dayColor: string;
   isLight: boolean;
   isDefaultImage: boolean;
+  image: File | null;
 }
 
 export const initialTheme: ThemeData = {
@@ -16,6 +17,7 @@ export const initialTheme: ThemeData = {
   dayColor: DEFAULT_COLOR_SCHEME.DAY_COLOR,
   isLight: true,
   isDefaultImage: false,
+  image: null,
 };
 
 /*check if initial should be null or initialTheme  if dispatch gives issues set to Dispatch<> | null*/

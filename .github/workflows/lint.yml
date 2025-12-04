@@ -1,0 +1,19 @@
+name: lint
+on: [push]
+jobs:
+  ruff-lint:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Display Python Version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install Ruff
+        run: pip install ruff
+      - name: Run Ruff Check on Src
+        run: ruff check ./backend/src
+      - name: Run Ruff Check on Tests
+        run: ruff check ./backend/tests

@@ -1,0 +1,25 @@
+.error {
+  position: absolute;
+  top: 3%;
+  display: flex;
+  flex-direction: row;
+  background-color: #ffff;
+  width: 400px;
+  height: 58px;
+  border: 1px solid;
+  border-color: #ff0000;
+  border-radius: 8px;
+  padding: 2px 10px;
+
+  img {
+    width: 20px;
+    height: 20px;
+    align-self: center;
+    margin-right: 5px;
+  }
+
+  p {
+    padding: 10px 0;
+    align-self: center;
+  }
+}

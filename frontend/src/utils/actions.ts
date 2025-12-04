@@ -3,6 +3,7 @@ export const ActionType = {
   EditDayColor: "EditDayColor",
   SetLightMode: "SetLightMode",
   SetDefaultImage: "SetDefaultImage",
+  EditImage: "EditImage",
 } as const;
 
 export interface EditWeekColor {
@@ -26,8 +27,14 @@ export interface SetDefaultImage {
   payload: boolean;
 }
 
+export interface EditImage {
+  type: typeof ActionType.EditImage;
+  payload: File | null;
+}
+
 export type EditModeActions =
   | EditWeekColor
   | EditDayColor
   | SetLightMode
-  | SetDefaultImage;
+  | SetDefaultImage
+  | EditImage;
