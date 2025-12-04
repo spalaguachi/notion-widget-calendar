@@ -31,7 +31,7 @@ const ColorPicker = ({ selectorType }: ColorPickerProps) => {
     boxShadow: "none",
     fontWeight: "lighter",
   };
-  
+
   const handleClick = (color: string) => {
     const hex = color.toUpperCase();
     if (selectorType === COLOR_TARGET.WEEK) {

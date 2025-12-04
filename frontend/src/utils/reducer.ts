@@ -6,6 +6,7 @@ import {
   type SetDefaultImage,
   type EditDayColor,
   type SetLightMode,
+  type EditImage,
 } from "./actions";
 
 // for now seperate file, might want to put into context.tsx file
@@ -27,6 +28,8 @@ export function themeReducer(
       return { ...theme, isLight: action.payload };
     case ActionType.SetDefaultImage:
       return { ...theme, isDefaultImage: action.payload };
+    case ActionType.EditImage:
+      return { ...theme, image: action.payload };
     default:
       return theme;
   }
@@ -50,4 +53,9 @@ export const setLightMode = (isLight: boolean): SetLightMode => ({
 export const setDefaultImage = (isDefaultImage: boolean): SetDefaultImage => ({
   type: ActionType.SetDefaultImage,
   payload: isDefaultImage,
+});
+
+export const editImage = (image: File | null): EditImage => ({
+  type: ActionType.EditImage,
+  payload: image,
 });
