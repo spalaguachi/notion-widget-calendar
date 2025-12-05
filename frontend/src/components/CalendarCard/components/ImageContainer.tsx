@@ -11,7 +11,7 @@ import {
   acceptedFileTypes,
 } from "../ImageContainerHelpers";
 import Banner from "../../Banner";
-import { editImage } from "../../../utils/reducer";
+// import { editImage } from "../../../utils/reducer";
 const ImageContainer = () => {
   interface UploadFile {
     file: File;
