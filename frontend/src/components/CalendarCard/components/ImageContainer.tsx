@@ -2,7 +2,7 @@ import React from "react";
 import imgUpload from "../../../assets/upload_cloud.svg";
 import imgRemove from "../../../assets/trash.svg";
 import { useState, useRef, useEffect } from "react";
-import { useThemeDispatch } from "../../../utils/context";
+// import { useThemeDispatch } from "../../../utils/context";
 import {
   maxFileSizeBytes,
   fmtBytes,
@@ -18,7 +18,7 @@ const ImageContainer = () => {
     filename: string;
     preview: string;
   }
-  const dispatch = useThemeDispatch();
+  // const dispatch = useThemeDispatch();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<UploadFile | null>(null);
@@ -74,7 +74,7 @@ const ImageContainer = () => {
       preview: preview,
     };
 
-    dispatch(editImage(newImage.file));
+    // dispatch(editImage(newImage.file));
 
     setImage((prev) => {
       if (prev?.preview) URL.revokeObjectURL(prev.preview);
@@ -83,7 +83,7 @@ const ImageContainer = () => {
   };
 
   const removeFile = () => {
-    dispatch(editImage(null));
+    // dispatch(editImage(null));
     setImage((prev) => {
       if (!prev) return null;
       if (prev.preview) URL.revokeObjectURL(prev.preview);
