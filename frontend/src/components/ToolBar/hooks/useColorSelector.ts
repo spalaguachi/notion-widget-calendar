@@ -3,35 +3,25 @@ import { useState } from "react";
 // custom hook to manage showing the respective color picker for week or day, and closing/when click close
 // another custom hook called useClickOutside...
 //
-interface ColorSelectorState {
-  activeSelector: string | null;
-  showPopUp: boolean;
-  handleColorSelector: (selectorType: string) => void;
-  handleClosePopUp: () => void;
-}
+// interface ColorSelectorState {
+//   activeSelector: string | null;
+//   toggle: (selectorType: string|null) => void;
+// }
 
-const useColorSelector = (): ColorSelectorState => {
+const useColorSelector = () => {
   //initial state
-  const [showPopUp, setShowPopUp] = useState(false);
   const [activeSelector, setActiveSelector] = useState<string | null>(null);
 
-  const handleColorSelector = (selectorType: string) => {
-    const wasSameSelector = activeSelector === selectorType;
-    setShowPopUp(!wasSameSelector);
-    setActiveSelector(wasSameSelector ? null : selectorType);
+  const toggle = (selectorType: string | null) => {
+    setActiveSelector((current) => (current === selectorType ? null : selectorType));
   };
 
-  const handleClosePopUp = () => {
-    setShowPopUp(false);
-    setActiveSelector(null);
-  };
+
   return {
     activeSelector,
-    showPopUp,
-    handleColorSelector,
-    handleClosePopUp,
+    toggle
   };
 };
 
 export { useColorSelector };
-export type { ColorSelectorState };
+// export type { ColorSelectorState };
