@@ -1,73 +1,61 @@
 import "./index.css";
 import LightToggle from "./components/LightToggle";
-import PopUp from "../PopUp";
-import ColorPicker from "../ColorPicker";
-import ColorSelector from "./components/ColorSelector";
-import { COLOR_TARGET } from "./color";
+import {
+  COLOR_TARGET,
+  DEFAULT_PRESET_COLORS,
+} from "./color";
 import { useColorSelector } from "./hooks/useColorSelector";
-import { useOuterClick } from "./hooks/useOuterClick";
-import { useColorTheme } from "../../utils/context";
-import { type Ref } from "react";
+import { useColorTheme, useThemeDispatch } from "../../utils/context";
+import { useState } from "react";
 import DefaultImage from "./components/DefaultImage";
+import ColorControl from "../ColorControl";
+import { editDayColor, editWeekColor } from "../../utils/reducer";
 //passing refs,hooks,
-interface ToolBarViewProps {
-  weekColor: string;
-  dayColor: string;
-  activeSelector: string | null;
-  showPopUp: boolean;
-  handleColorSelector: (selectorType: string) => void;
-  interactiveAreaRef: Ref<HTMLDivElement>;
-}
 
-const ToolBarView = ({
-  weekColor,
-  dayColor,
-  activeSelector,
-  showPopUp,
-  handleColorSelector,
-  interactiveAreaRef,
-}: ToolBarViewProps) => {
+const ToolBar = () => {
+  const { activeSelector, toggle } = useColorSelector();
+ 
+  const theme = useColorTheme();
+  const dispatch = useThemeDispatch();
+  const [presetColors, setPresetColors] = useState(DEFAULT_PRESET_COLORS);
+  const handlePresetColors = (color: string) => {
+    const hex = color.toUpperCase();
+    if(!presetColors.includes(hex)){
+      setPresetColors((prev) => [hex, ...prev.slice(0, -1)]);      
+    }
+  };
   return (
-    <div className="toolbar-container">
+   <div className="toolbar-container">
       <div className="toolbar">
-        <div className="color-selector-area" ref={interactiveAreaRef}>
-          <ColorSelector
+        <div className="color-selector-area">
+      {/* decouple logic so it can have changes: colorselectorgroup<> cs,cs,popup<cp>
+       */}
+          <ColorControl
             selectorType={COLOR_TARGET.WEEK}
+            color= {theme.weekColor}
             isActive={activeSelector === COLOR_TARGET.WEEK}
-            onClick={handleColorSelector}
-            style={{ backgroundColor: weekColor }}
+            onChange={(hex) => dispatch(editWeekColor(hex))}
+            onToggle={toggle}
+            presetColors={presetColors}
+            onAddPreset={handlePresetColors}
+            buttonStyle={{ backgroundColor: theme.weekColor }}
           />
-          <ColorSelector
+          <ColorControl
             selectorType={COLOR_TARGET.DAY}
+            color={theme.dayColor}
             isActive={activeSelector === COLOR_TARGET.DAY}
-            onClick={handleColorSelector}
-            style={{ backgroundColor: dayColor }}
+            onChange={(hex)=> dispatch(editDayColor(hex))}
+            onToggle={toggle}
+            presetColors={presetColors}
+            onAddPreset={handlePresetColors}
+            buttonStyle={{ backgroundColor: theme.dayColor }}
           />
-          <PopUp isOpen={showPopUp}>
-            <ColorPicker selectorType={activeSelector} />
-          </PopUp>
         </div>
         <hr className="divider" />
         <LightToggle />
         <DefaultImage />
       </div>
     </div>
-  );
-};
-const ToolBar = () => {
-  const { activeSelector, showPopUp, handleColorSelector, handleClosePopUp } =
-    useColorSelector();
-  const interactiveAreaRef = useOuterClick(handleClosePopUp, showPopUp);
-  const theme = useColorTheme();
-
-  return (
-    <ToolBarView
-      {...theme}
-      activeSelector={activeSelector}
-      showPopUp={showPopUp}
-      handleColorSelector={handleColorSelector}
-      interactiveAreaRef={interactiveAreaRef}
-    />
   );
 };
 
