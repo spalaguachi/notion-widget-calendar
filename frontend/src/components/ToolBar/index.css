@@ -33,7 +33,7 @@
   height: 35%;
 }
 
-.toolbar > .color-selector-area > .theme-picker {
+.theme-picker {
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -43,7 +43,14 @@
 .theme-picker.active {
   border: 2px solid #916cff;
 }
+/* .color-control {
+  position: relative;
+} */
 
+/*.popUp {
+  position: absolute;
+  top: 0;
+} */
 .divider {
   width: 40px;
   border: 1px solid rgba(0, 0, 0, 0.2);

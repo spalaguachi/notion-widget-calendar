@@ -6,6 +6,8 @@ export const COLOR_TARGET = {
 export const DEFAULT_COLOR_SCHEME = {
   WEEK_COLOR: "#E9C2CB",
   DAY_COLOR: "#F9ECE5",
+  WEEK_TEXT_COLOR: "#000",
+  DAY_TEXT_COLOR: "#000",
 } as const;
 
 export const DEFAULT_PRESET_COLORS = [
